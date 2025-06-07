@@ -13,6 +13,8 @@
     <!-- Or use a more specific H2 JTA data source if available/configured e.g., jdbc/auctionH2DS -->
 
     <class>lk.java.bcd.auction.entity.AuctionItem</class>
+    <class>lk.java.bcd.auction.entity.User</class>
+    <class>lk.java.bcd.auction.entity.Bid</class>
 
     <properties>
       <!-- Database connection properties -->

@@ -1,10 +1,19 @@
 package lk.java.bcd.auction.entity;
 
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 public class AuctionItem {
@@ -19,8 +28,20 @@ public class AuctionItem {
     private double currentPrice;
     private Date endTime;
 
+    @ManyToOne
+    @JoinColumn(name = "winning_user_id")
+    private User winningUser;
+
+    @OneToMany(mappedBy = "auctionItem", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Bid> bids = new ArrayList<>();
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private AuctionStatus status;
+
     // Constructors
     public AuctionItem() {
+        this.status = AuctionStatus.OPEN; // Default status
     }
 
     public AuctionItem(String name, String description, double startingPrice, Date endTime) {
@@ -29,6 +50,7 @@ public class AuctionItem {
         this.startingPrice = startingPrice;
         this.currentPrice = startingPrice; // Initial current price is the starting price
         this.endTime = endTime;
+        this.status = AuctionStatus.OPEN; // Default status
     }
 
     // Getters and Setters
@@ -80,6 +102,41 @@ public class AuctionItem {
         this.endTime = endTime;
     }
 
+    public User getWinningUser() {
+        return winningUser;
+    }
+
+    public void setWinningUser(User winningUser) {
+        this.winningUser = winningUser;
+    }
+
+    public List<Bid> getBids() {
+        return bids;
+    }
+
+    public void setBids(List<Bid> bids) {
+        this.bids = bids;
+    }
+
+    public AuctionStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(AuctionStatus status) {
+        this.status = status;
+    }
+
+    // Helper method to add a bid
+    public void addBid(Bid bid) {
+        bids.add(bid);
+        bid.setAuctionItem(this);
+    }
+
+    public void removeBid(Bid bid) {
+        bids.remove(bid);
+        bid.setAuctionItem(null);
+    }
+
     @Override
     public String toString() {
         return "AuctionItem{" +
@@ -89,6 +146,9 @@ public class AuctionItem {
                 ", startingPrice=" + startingPrice +
                 ", currentPrice=" + currentPrice +
                 ", endTime=" + endTime +
+                ", winningUser=" + (winningUser != null ? winningUser.getUsername() : "null") +
+                ", status=" + status +
+                ", bidsCount=" + (bids != null ? bids.size() : 0) +
                 '}';
     }
 }

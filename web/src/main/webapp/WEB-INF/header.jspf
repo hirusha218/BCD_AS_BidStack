@@ -1,0 +1,26 @@
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page import="lk.java.bcd.auction.web.util.SessionManager" %>
+<div style="background-color: #f0f0f0; padding: 10px; border-bottom: 1px solid #ccc;">
+    <a href="${pageContext.request.contextPath}/auction">Home</a> |
+    <%
+        String loggedInUser = (String) request.getAttribute("loggedInUsername"); // Set by AuctionServlet
+        if (loggedInUser == null) {
+            // Fallback to session if not passed as attribute (though attribute is preferred for JSP rendering)
+            loggedInUser = SessionManager.getLoggedInUsername(session);
+        }
+
+        if (loggedInUser != null) {
+    %>
+        <span>Logged in as: <strong><%= loggedInUser %></strong></span> |
+        <a href="${pageContext.request.contextPath}/auction?action=logout">Logout</a>
+    <%
+        } else {
+    %>
+        <a href="${pageContext.request.contextPath}/auction?action=login">Login</a> |
+        <a href="${pageContext.request.contextPath}/auction?action=register">Register</a>
+    <%
+        }
+    %>
+    <!-- Add other navigation links here if needed -->
+</div>
+<hr>
