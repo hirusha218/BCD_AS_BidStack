@@ -38,7 +38,7 @@ public interface UserService {
 }
 
 // Custom exception for registration issues
-class UserRegistrationException extends Exception {
+public class UserRegistrationException extends Exception {
     public UserRegistrationException(String message) {
         super(message);
     }
