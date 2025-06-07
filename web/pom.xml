@@ -27,20 +27,21 @@
             <scope>provided</scope>
         </dependency>
 
-        <!-- EJB API -->
-        <dependency>
-            <groupId>jakarta.ejb</groupId>
-            <artifactId>jakarta.ejb-api</artifactId>
-            <version>4.0.0</version>
-            <scope>provided</scope>
-        </dependency>
-
         <!-- Servlet API (commonly used with EJBs) -->
         <dependency>
             <groupId>jakarta.servlet</groupId>
             <artifactId>jakarta.servlet-api</artifactId>
             <version>5.0.0</version>
             <scope>provided</scope>
+        </dependency>
+
+        <!-- Dependency on the EJB module -->
+        <dependency>
+            <groupId>lk.java.bcd</groupId>
+            <artifactId>ejb</artifactId>
+            <version>${project.version}</version>
+            <type>ejb</type>
+            <scope>provided</scope> <!-- EJBs are typically provided by the server environment -->
         </dependency>
 
         <!-- JMS API -->
