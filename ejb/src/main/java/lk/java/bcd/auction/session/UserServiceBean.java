@@ -7,6 +7,8 @@ import jakarta.persistence.NoResultException;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
 import lk.java.bcd.auction.entity.User;
+// Explicit import for UserRegistrationException, even if in same package, for clarity
+import lk.java.bcd.auction.session.UserRegistrationException;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;

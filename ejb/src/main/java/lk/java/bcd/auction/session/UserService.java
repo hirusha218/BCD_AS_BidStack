@@ -37,9 +37,4 @@ public interface UserService {
     // or is handled by Jakarta Security.
 }
 
-// Custom exception for registration issues
-public class UserRegistrationException extends Exception {
-    public UserRegistrationException(String message) {
-        super(message);
-    }
-}
+// UserRegistrationException is now in its own file.
