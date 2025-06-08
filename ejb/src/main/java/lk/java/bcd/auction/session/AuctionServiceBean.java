@@ -113,4 +113,9 @@ public class AuctionServiceBean implements AuctionService {
 
         return updatedItem;
     }
+
+    @Override
+    public void placeBid(Long itemId, double username, double bidAmount) {
+
+    }
 }

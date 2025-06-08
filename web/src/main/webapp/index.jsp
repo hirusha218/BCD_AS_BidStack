@@ -1,223 +1,162 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
     <meta charset="UTF-8">
-    <title>HiBid Auction</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>Online Auction System</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <style>
+        .auction-item img {
+            max-height: 300px;
+            object-fit: contain;
+        }
+        .footer {
+            background-color: #f8f9fa;
+            padding: 15px;
+            text-align: center;
+            margin-top: 50px;
+        }
+    </style>
 </head>
-<body>
-<header>
-    <div class="top-bar">
-        <div class="account-links">
-            <a href="login.jsp">Sign In</a>
-            <a href="#">Find Auctions</a>
-            <a href="#">Blog</a>
-            <a href="#">Sell</a>
-            <a href="#">Join Our Mailing List</a>
-            <a href="#">Manage Notifications</a>
-            <select>
-                <option>English</option>
-            </select>
+<body class="bg-light">
+
+<!-- Navigation Bar -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <div class="container">
+        <a class="navbar-brand fw-bold" href="#">BidStack</a>
+
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarContent">
+
+            <!-- Search Bar -->
+            <form class="d-flex ms-auto me-3" role="search">
+                <input class="form-control me-2" type="search" placeholder="Search items" aria-label="Search">
+                <button class="btn btn-outline-light" type="submit">Search</button>
+            </form>
+
+            <!-- More Dropdown -->
+            <ul class="navbar-nav me-3">
+                <li class="nav-item">
+                    <a class="nav-link active" href="viewItem.jsp">Home</a>
+                </li>
+
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="moreDropdown" role="button" data-bs-toggle="dropdown">
+                        More
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="moreDropdown">
+                        <li><a class="dropdown-item" href="#">My Bids</a></li>
+                        <li><a class="dropdown-item" href="#">My Account</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item text-danger" href="#">Logout</a></li>
+                    </ul>
+                </li>
+            </ul>
+
+            <!-- Login / Sign Up / Logout -->
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="btn btn-outline-light me-2" href="login.jsp">Login</a>
+                </li>
+                <li class="nav-item">
+                    <a class="btn btn-warning me-2" href="signup.jsp">Sign Up</a>
+                </li>
+
+            </ul>
+
         </div>
     </div>
-    <div class="main-header">
-        <div class="logo">
-            <img src="https://via.placeholder.com/150/hibid_logo.png" alt="HiBid Logo">
+</nav>
+
+<!-- Main Content -->
+<div class="container mt-5">
+    <div class="card shadow-lg">
+        <div class="card-header bg-dark text-white">
+            <h3 class="mb-0">Live Auction: Smartwatch Pro 3</h3>
+            <small class="text-warning">Ends in: <strong>01h 23m 45s</strong></small>
         </div>
-        <div class="search-bar">
-            <select>
-                <option>Shop by Category</option>
-            </select>
-            <input type="text" placeholder="Search all of HiBid">
-            <input type="text" placeholder="Zip">
-            <select>
-                <option>50 Miles</option>
-            </select>
-            <button>Search</button>
+
+        <div class="card-body">
+            <div class="row auction-item mb-4">
+                <div class="col-md-5">
+                    <img src="https://www.bing.com/images/search?view=detailV2&ccid=Cgg7x4If&id=1B4FABDC5CC4E668169771E15B0C3318504B6F4F&thid=OIP.Cgg7x4IfpiNhCdalpA8DOQHaHc&mediaurl=https%3a%2f%2fm.media-amazon.com%2fimages%2fI%2f71AcGKTe9%2bL._AC_SL1500_.jpg&cdnurl=https%3a%2f%2fth.bing.com%2fth%2fid%2fR.0a083bc7821fa6236109d6a5a40f0339%3frik%3dT29LUBgzDFvhcQ%26pid%3dImgRaw%26r%3d0&exph=1500&expw=1491&q=Smartwatch&simid=608055585120806939&FORM=IRPRST&ck=52F5E74DD23749935FFD2A78FAE952CB&selectedIndex=0&itb=0" alt="Smartwatch" class="img-fluid rounded border">
+                </div>
+                <div class="col-md-7">
+                    <h4>Product Description</h4>
+                    <p>
+                        Premium Smartwatch Pro 3 with heart rate monitoring, GPS, Bluetooth, and 7-day battery life.
+                        Perfect for fitness and daily use. Brand new with warranty.
+                    </p>
+                    <h5 class="text-success mt-4">Current Highest Bid:</h5>
+                    <h2 id="highestBid" class="text-primary">Rs. 12,000</h2>
+
+                    <form onsubmit="event.preventDefault(); placeBid();" class="mt-3">
+                        <div class="input-group">
+                            <span class="input-group-text">Rs.</span>
+                            <input type="number" class="form-control" id="bidAmount" placeholder="Enter your bid" required>
+                            <button class="btn btn-success" type="submit">Place Bid</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Bid History -->
+            <div class="row">
+                <div class="col-md-12">
+                    <h5 class="mb-3">Bid History</h5>
+                    <ul class="list-group" id="bidHistory">
+                        <li class="list-group-item">User1 bid Rs. 12,000</li>
+                        <li class="list-group-item">User2 bid Rs. 11,500</li>
+                        <li class="list-group-item">User3 bid Rs. 11,000</li>
+                    </ul>
+                </div>
+            </div>
         </div>
     </div>
-    <nav>
-        <a href="#">All Categories</a>
-        <a href="#">Today's Events</a>
-        <a href="#">Auctions Near Me</a>
-        <a href="#">Auctions by State</a>
-        <a href="#">Company Search</a>
-        <a href="#">Watch List</a>
-        <a href="#">Bids</a>
-    </nav>
-</header>
+</div>
 
-<main>
-    <section class="hero">
-        <h1>LIVE & ONLINE AUCTIONS. SEARCH, JOIN & BID NOW</h1>
-        <p>OVER 350 ITEMS AT AUCTION</p>
-        <div class="auction-highlights">
-            <div class="highlight">
-                <img src="https://via.placeholder.com/150/auction1.jpg" alt="Auction Items">
-                <p>JUNE 7TH SALE FEDERAL ONLINE GOV'T SURPLUS FEDERAL SEIZURE</p>
-                <p>VAI INTERNATIONAL INCORPORATED</p>
-                <p>3325 Lots - Ends 6/7/2025</p>
-            </div>
-            <div class="highlight">
-                <img src="https://via.placeholder.com/150/coins1.jpg" alt="King Gilbert Coins">
-                <p>RETURN OF THE KING GILBERTI SERIES: HOUSE OF GILBERTI</p>
-                <p>One of a Kind Coins LLC</p>
-                <p>200 Lots - Ends 6/5/2025</p>
-            </div>
-            <div class="highlight">
-                <img src="https://via.placeholder.com/150/coins2.jpg" alt="Memph Minerva Coin">
-                <p>JUNE 4TH - 8TH MEMPH MINERVA COIN AUCTION</p>
-                <p>Gold Standard Auctions</p>
-                <p>4233 Lots - Ends 6/8/2025</p>
-            </div>
-        </div>
-    </section>
+<!-- Footer -->
+<div class="footer mt-5">
+    <div class="container">
+        <p class="text-muted mb-0">&copy; 2025 AuctionZone. All rights reserved.</p>
+    </div>
+</div>
 
-    <section class="categories">
-        <h2>FIND AUCTIONS BY CATEGORY</h2>
-        <div class="category-grid">
-            <div class="category">
-                <img src="https://via.placeholder.com/150" alt="Art">
-                <p>Art</p>
-            </div>
-            <div class="category">
-                <img src="https://via.placeholder.com/150" alt="Antiques & Collectibles">
-                <p>Antiques & Collectibles</p>
-            </div>
-            <div class="category">
-                <img src="https://via.placeholder.com/150/coins.jpg" alt="Coins & Currency">
-                <p>Coins & Currency</p>
-            </div>
-            <div class="category">
-                <img src="https://via.placeholder.com/150/jewelry.jpg" alt="Jewelry, Watches & Gemstones">
-                <p>Jewelry, Watches & Gemstones</p>
-            </div>
-            <div class="category">
-                <img src="https://via.placeholder.com/150/fashion.jpg" alt="Fashion">
-                <p>Fashion</p>
-            </div>
-            <div class="category">
-                <img src="https://plus.unsplash.com/premium_photo-1709589145461-4797b4e80e9c?fm=jpg&q=60&w=3000&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8YmFsbHxlbnwwfHwwfHx8MA%3D%3D" alt="Kid & Baby Essentials">
-                <p>Kid & Baby Essentials</p>
-            </div>
-            <div class="category">
-                <img src="https://via.placeholder.com/150/garden.jpg" alt="Lawn & Garden">
-                <p>Lawn & Garden</p>
-            </div>
-            <div class="category">
-                <img src="https://via.placeholder.com/150/furniture.jpg" alt="Furniture">
-                <p>Furniture</p>
-            </div>
-            <div class="category">
-                <img src="https://via.placeholder.com/150/sports.jpg" alt="Sporting Goods">
-                <p>Sporting Goods</p>
-            </div>
-            <div class="category">
-                <img src="https://via.placeholder.com/150/toys.jpg" alt="Toys">
-                <p>Toys</p>
-            </div>
-            <div class="category">
-                <img src="https://via.placeholder.com/150/electronics.jpg" alt="Computers & Electronics">
-                <p>Computers & Electronics</p>
-            </div>
-        </div>
-        <button class="view-all">VIEW ALL</button>
-        <section class="auction-grid">
-            <div class="auction-item">
-                <img src="https://via.placeholder.com/150/picasso.jpg" alt="Rare Pablo Picasso Artwork">
-                <p>[Rare] Pablo Picasso Artwork (1963) - Visage No. 202</p>
-                <p>Today at 6:30 PM<br>Bid during last 9 seconds.<br>06:17:19</p>
-                <p class="status">STARTING SOON</p>
-                <p>Buy it now for $10,000</p>
-                <button class="bid-btn">BID NOW</button>
-            </div>
-            <div class="auction-item">
-                <img src="https://via.placeholder.com/150/camera.jpg" alt="Canon EOS R5 Mark II">
-                <p>Canon EOS R5 Mark II Interchangeable Lens Mirrorless</p>
-                <p>Today at 7:58 PM<br>Bid during last 9 seconds.<br>07:45:19</p>
-                <p class="status">STARTING SOON</p>
-                <p>Buy it now for $11,519</p>
-                <button class="bid-btn">BID NOW</button>
-            </div>
-            <div class="auction-item">
-                <img src="https://via.placeholder.com/150/macbook1.jpg" alt="Apple MacBook Air 13-inch">
-                <p>Apple - MacBook Air 13-inch Apple M4 chip Built</p>
-                <p>Today at 10:58 PM<br>Bid during last 9 seconds.<br>10:45:19</p>
-                <p class="status">STARTING SOON</p>
-                <p>Buy it now for $6,269</p>
-                <button class="bid-btn">BID NOW</button>
-            </div>
-            <div class="auction-item">
-                <img src="https://via.placeholder.com/150/macbook2.jpg" alt="Apple MacBook Air 15-inch">
-                <p>Apple MacBook Air 15-inch Apple M4 chip Built</p>
-                <p>Tomorrow at 1:53 AM<br>Bid during last 9 seconds.<br>13:40:19</p>
-                <p class="status">STARTING SOON</p>
-                <p>Buy it now for $5,929</p>
-                <button class="bid-btn">BID NOW</button>
-            </div>
-            <div class="auction-item">
-                <img src="https://via.placeholder.com/150/bundle.jpg" alt="The Black Label Bundle">
-                <p>The Black Label Bundle</p>
-                <p>$23.02<br>Distinctive11<br>00:00:09</p>
-                <button class="bid-btn">BID NOW</button>
-                <p>Buy it now for $3,030</p>
-            </div>
-            <div class="auction-item">
-                <img src="https://via.placeholder.com/150/tonic.jpg" alt="Set of 30 wind Oasis Splash">
-                <p>Set of 30 - wind Oasis Splash - Refreshing Glow Tonic - 100ml</p>
-                <p>$4.95<br>Silva_Bullet<br>00:00:09</p>
-                <button class="bid-btn">BID NOW</button>
-                <p>Buy it now for $1,050</p>
-            </div>
-            <div class="auction-item">
-                <img src="https://via.placeholder.com/150/watch.jpg" alt="Empress Alice Automatic Watch">
-                <p>Empress Alice Automatic Ladies Watch - Mint Dial</p>
-                <p>$4.16<br>FaridehRoshan<br>00:00:06</p>
-                <button class="bid-btn">BID NOW</button>
-                <p>Buy it now for $805</p>
-            </div>
-            <div class="auction-item">
-                <img src="https://via.placeholder.com/150/giftcard1.jpg" alt="Panera Bread Gift Card">
-                <p>$25 Panera Bread Gift Card + 50 bids</p>
-                <p>$0.15<br>Toofoo<br>00:00:10</p>
-                <button class="bid-btn">BID NOW</button>
-                <p>Buy it now for $555</p>
-            </div>
-            <div class="auction-item">
-                <img src="https://via.placeholder.com/150/makeup.jpg" alt="Perricone MD No Makeup Smoothing">
-                <p>Perricone - MD No Makeup Smoothing Facial Conformer</p>
-                <p>$0.46<br>txcardinal<br>00:00:07</p>
-                <button class="bid-btn">BID NOW</p>
-                <p>Buy it now for $329</p>
-            </div>
-            <div class="auction-item">
-                <img src="https://via.placeholder.com/150/bracelet.jpg" alt="Francis Claire Farah Moissanite">
-                <p>Francis Claire Farah Moissanite Bracelet - 0.85 Carat DEF-color</p>
-                <p>$0.88<br>RickTheTiger<br>00:00:09</p>
-                <button class="bid-btn">BID NOW</button>
-                <p>Buy it now for $1,239</p>
-            </div>
-            <div class="auction-item">
-                <img src="https://via.placeholder.com/150/giftcard2.jpg" alt="Home Depot Digital Gift Card">
-                <p>$10 Home Depot® Digital Gift Card + 20 bids</p>
-                <p>$0.99<br>heart0322<br>00:00:04</p>
-                <button class="bid-btn">BID NOW</button>
-                <p>Buy it now for $22</p>
-            </div>
-            <div class="auction-item">
-                <img src="https://via.placeholder.com/150/earrings.jpg" alt="Palmero - Lauma Collection">
-                <p>Palmero - Lauma Collection - Brielie Earrings</p>
-                <p>$0.99<br>futurebuyer<br>00:00:04</p>
-                <button class="bid-btn">BID NOW</button>
-                <p>Buy it now for $280</p>
-            </div>
-        </section>
-    </section>
-</main>
+<!-- JavaScript -->
+<script>
+    function placeBid() {
+        const amount = document.getElementById("bidAmount").value;
+        const xhr = new XMLHttpRequest();
+        xhr.open("POST", "PlaceBidServlet", true);
+        xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === 4 && xhr.status === 200) {
+                document.getElementById("bidAmount").value = '';
+            }
+        };
+        xhr.send("amount=" + amount);
+    }
 
-<footer>
-    <a href="#">Feedback / Question</a>
-</footer>
+    function connectToLiveUpdates() {
+        const eventSource = new EventSource("BidUpdatesServlet");
+        eventSource.onmessage = function (event) {
+            const data = JSON.parse(event.data);
+            document.getElementById("highestBid").innerText = "Rs. " + data.amount;
+            const history = document.getElementById("bidHistory");
+            const newBid = document.createElement("li");
+            newBid.className = "list-group-item";
+            newBid.innerText = data.username + " bid Rs. " + data.amount;
+            history.insertBefore(newBid, history.firstChild);
+        };
+    }
+
+    window.onload = function () {
+        connectToLiveUpdates();
+    };
+</script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

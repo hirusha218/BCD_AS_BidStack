@@ -23,18 +23,13 @@ public interface UserService {
     User findUserByUsername(String username);
 
     /**
-     * (Conceptual) Validates a given raw password against the user's stored hashed password.
-     * Actual implementation of password comparison (e.g., BCrypt.checkpw) would happen here
-     * if not handled by a declarative security mechanism.
+     * Validates a given raw password against the user's stored hashed password.
      *
      * @param user The user object containing the hashed password.
      * @param rawPassword The raw password to validate.
      * @return true if the password is valid, false otherwise.
      */
     boolean isValidPassword(User user, String rawPassword);
-    // This method is more for conceptual placement. In a real app,
-    // password validation often happens closer to the point of credential submission (web/API tier)
-    // or is handled by Jakarta Security.
-}
 
-// UserRegistrationException is now in its own file.
+    User authenticateUser(String trim, String password);
+}

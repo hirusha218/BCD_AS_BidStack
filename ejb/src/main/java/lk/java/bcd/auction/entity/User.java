@@ -10,18 +10,13 @@ import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
 import jakarta.persistence.UniqueConstraint;
 import java.util.Date;
-import java.io.Serializable; // Add this import
 
 @Entity
 @Table(name = "app_user", uniqueConstraints = { // "user" is often a reserved keyword in SQL
     @UniqueConstraint(columnNames = "username"),
     @UniqueConstraint(columnNames = "email")
 })
-// Add "implements Serializable"
-public class User implements Serializable {
-
-    // Add this line
-    private static final long serialVersionUID = 1L;
+public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
