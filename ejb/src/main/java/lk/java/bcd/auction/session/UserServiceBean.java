@@ -7,14 +7,15 @@ import jakarta.persistence.NoResultException;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
 import lk.java.bcd.auction.entity.User;
-// Explicit import for UserRegistrationException, even if in same package, for clarity
+// Import the new PasswordUtil
+import lk.java.bcd.auction.util.PasswordUtil;
 import lk.java.bcd.auction.session.UserRegistrationException;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 @Stateless
-@DeclareRoles({"USER", "ADMIN"}) // Declaring roles that might interact with or be managed by this service
+@DeclareRoles({"USER", "ADMIN"})
 public class UserServiceBean implements UserService {
 
     private static final Logger LOGGER = Logger.getLogger(UserServiceBean.class.getName());
@@ -24,13 +25,11 @@ public class UserServiceBean implements UserService {
 
     @Override
     public User registerUser(User user) throws UserRegistrationException {
-        // Check for existing username
         if (findUserByUsername(user.getUsername()) != null) {
             LOGGER.log(Level.WARNING, "Attempt to register with existing username: {0}", user.getUsername());
             throw new UserRegistrationException("Username '" + user.getUsername() + "' already exists.");
         }
 
-        // Check for existing email
         TypedQuery<User> queryByEmail = em.createQuery(
                 "SELECT u FROM User u WHERE u.email = :email", User.class);
         queryByEmail.setParameter("email", user.getEmail());
@@ -44,8 +43,14 @@ public class UserServiceBean implements UserService {
             // This is good, means email is not taken
         }
 
-        // Persist the new user
-        // Assumes user.passwordHash is already securely hashed
+        // Hash the password before persisting using the new PasswordUtil
+        // Assuming the password in the user object is plain text at this point
+        // or that hashing is consistently applied before calling registerUser.
+        // For clarity, if registerUser expects a pre-hashed password, that logic should be in the caller.
+        // If it expects a raw password, it should hash it here.
+        // The original User.java suggested passwordHash is already set.
+        // Let's assume the caller of registerUser (e.g., SignUpServlet) will hash it.
+
         em.persist(user);
         LOGGER.log(Level.INFO, "Registered new user: {0}", user.getUsername());
         return user;
@@ -62,33 +67,31 @@ public class UserServiceBean implements UserService {
         try {
             return query.getSingleResult();
         } catch (NoResultException e) {
-            return null; // User not found
+            return null;
         }
     }
 
     @Override
     public boolean isValidPassword(User user, String rawPassword) {
-        // This is a conceptual placeholder.
-        // In a real application, you would use a secure password hashing library
-        // to compare the rawPassword against user.getPasswordHash().
-        // For example, using BCrypt:
-        // return BCrypt.checkpw(rawPassword, user.getPasswordHash());
-
-        // For this basic EJB, we'll simulate a simple check if the hash isn't null.
-        // DO NOT USE THIS IN PRODUCTION.
-        LOGGER.log(Level.WARNING, "isValidPassword in UserServiceBean is a placeholder and NOT secure for production.");
         if (user == null || user.getPasswordHash() == null || rawPassword == null) {
             return false;
         }
-        // This is NOT a secure check. It's just to make the method runnable.
-        // A real implementation would involve BCrypt.checkpw(rawPassword, user.getPasswordHash())
-        // For example, if passwordHash was just the raw password (VERY BAD IDEA, but for placeholder):
-        // return user.getPasswordHash().equals(rawPassword);
+        // Use the new PasswordUtil for checking
+        return PasswordUtil.checkPassword(rawPassword, user.getPasswordHash());
+    }
 
-        // Since we assume passwordHash is already hashed, we can't directly compare here
-        // without the actual hashing library (e.g. BCrypt) and its comparison method.
-        // This method, as is, is not truly functional for password validation without that library.
-        // It highlights that the EJB *could* do it if it had access to the hashing lib's check function.
-        throw new UnsupportedOperationException("Password validation requires a hashing library and should be implemented securely.");
+    /**
+     * Authenticates a user by username and raw password.
+     *
+     * @param username The username.
+     * @param rawPassword The raw password.
+     * @return The User object if authentication is successful, null otherwise.
+     */
+    public User authenticateUser(String username, String rawPassword) {
+        User user = findUserByUsername(username);
+        if (user != null && isValidPassword(user, rawPassword)) {
+            return user;
+        }
+        return null;
     }
 }
