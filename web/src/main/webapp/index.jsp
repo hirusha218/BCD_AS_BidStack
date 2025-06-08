@@ -10,7 +10,7 @@
 <header>
     <div class="top-bar">
         <div class="account-links">
-            <a href="#">Sign In or Create Account</a>
+            <a href="login.jsp">Sign In</a>
             <a href="#">Find Auctions</a>
             <a href="#">Blog</a>
             <a href="#">Sell</a>
