@@ -1,4 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -56,15 +57,26 @@
                 </li>
             </ul>
 
-            <!-- Login / Sign Up / Logout -->
+            <!-- Login / Sign Up / User Info / Logout -->
             <ul class="navbar-nav">
-                <li class="nav-item">
-                    <a class="btn btn-outline-light me-2" href="login.jsp">Login</a>
-                </li>
-                <li class="nav-item">
-                    <a class="btn btn-warning me-2" href="signup.jsp">Sign Up</a>
-                </li>
-
+                <c:choose>
+                    <c:when test="${isLoggedIn}">
+                        <li class="nav-item">
+                            <span class="nav-link text-white">Welcome, ${username}</span>
+                        </li>
+                        <li class="nav-item">
+                            <a class="btn btn-danger me-2" href="${pageContext.request.contextPath}/logout">Logout</a>
+                        </li>
+                    </c:when>
+                    <c:otherwise>
+                        <li class="nav-item">
+                            <a class="btn btn-outline-light me-2" href="${pageContext.request.contextPath}/login.jsp">Login</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="btn btn-warning me-2" href="${pageContext.request.contextPath}/signup.jsp">Sign Up</a>
+                        </li>
+                    </c:otherwise>
+                </c:choose>
             </ul>
 
         </div>

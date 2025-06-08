@@ -7,6 +7,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lk.java.bcd.auction.entity.User;
+import lk.java.bcd.auction.session.UserSessionBean;
 import lk.java.bcd.auction.session.UserService;
 import lk.java.bcd.auction.session.UserRegistrationException;
 import lk.java.bcd.auction.util.PasswordUtil; // EJB module PasswordUtil
@@ -22,6 +23,9 @@ public class SignUpServlet extends HttpServlet {
 
     @EJB
     private UserService userService;
+
+    @EJB
+    private UserSessionBean userSessionBean;
 
     // Note: PasswordUtil is now in the EJB module (lk.java.bcd.auction.util.PasswordUtil)
     // Static methods will be called directly. No need to inject if all methods are static.
@@ -64,9 +68,10 @@ public class SignUpServlet extends HttpServlet {
             newUser.setRegistrationDate(new Date());
 
             userService.registerUser(newUser);
+            userSessionBean.login(newUser); // Log in the user
             LOGGER.log(Level.INFO, "User registered successfully: {0}", username);
-            // Redirect to login page with a success message
-            response.sendRedirect(request.getContextPath() + "/login?signupSuccess=true");
+            // Redirect to index page
+            response.sendRedirect(request.getContextPath() + "/index");
 
         } catch (UserRegistrationException e) {
             LOGGER.log(Level.WARNING, "User registration failed: " + e.getMessage());

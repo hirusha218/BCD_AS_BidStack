@@ -42,7 +42,7 @@ public class IndexServlet extends HttpServlet {
         }
 
         try {
-            request.getRequestDispatcher("/WEB-INF/jsp/index.jsp").forward(request, response);
+            request.getRequestDispatcher("/index.jsp").forward(request, response);
         } catch (Exception e) {
             LOGGER.log(java.util.logging.Level.SEVERE, "Error forwarding to /WEB-INF/jsp/index.jsp from IndexServlet", e);
             // Handle error, maybe show a generic error page or send HTTP error
