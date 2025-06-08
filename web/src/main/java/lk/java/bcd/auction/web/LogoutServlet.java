@@ -55,12 +55,12 @@ public class LogoutServlet extends HttpServlet {
                 LOGGER.log(Level.INFO, "Logout called, no active user in UserSessionBean.");
             }
 
-            response.sendRedirect(request.getContextPath() + "/login?logoutSuccess=true");
+            response.sendRedirect(request.getContextPath() + "/index?logoutSuccess=true");
 
         } catch (Exception e) {
             LOGGER.log(Level.SEVERE, "Error during logout", e);
             // Even if error, try to redirect to login
-            response.sendRedirect(request.getContextPath() + "/login?logoutError=true");
+            response.sendRedirect(request.getContextPath() + "/index?logoutError=true");
         }
     }
 }
