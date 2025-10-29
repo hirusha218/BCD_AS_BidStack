@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<persistence xmlns="https://jakarta.ee/xml/ns/persistence"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="https://jakarta.ee/xml/ns/persistence https://jakarta.ee/xml/ns/persistence/persistence_3_0.xsd"
+             version="3.0">
+
+  <persistence-unit name="auctionPU" transaction-type="JTA">
+    <description>Persistence Unit for Auction Application</description>
+
+    <!-- Specify JTA data source, typically configured on the application server -->
+    <!-- For H2 in-memory, the server might auto-configure it, or you might need a specific one -->
+    <jta-data-source>java:comp/DefaultDataSource</jta-data-source>
+    <!-- Or use a more specific H2 JTA data source if available/configured e.g., jdbc/auctionH2DS -->
+
+    <class>lk.java.bcd.auction.entity.AuctionItem</class>
+    <class>lk.java.bcd.auction.entity.User</class>
+    <class>lk.java.bcd.auction.entity.Bid</class>
+
+    <properties>
+      <!-- Database connection properties -->
+      <!-- These might be overridden by the JTA data source configuration on the server for H2 in-memory -->
+      <property name="jakarta.persistence.jdbc.driver" value="org.h2.Driver"/>
+      <property name="jakarta.persistence.jdbc.url" value="jdbc:h2:mem:auctiondb;DB_CLOSE_DELAY=-1"/>
+      <property name="jakarta.persistence.jdbc.user" value="sa"/>
+      <property name="jakarta.persistence.jdbc.password" value=""/>
+
+      <!-- Schema generation options -->
+      <property name="jakarta.persistence.schema-generation.database.action" value="drop-and-create"/>
+      <!-- <property name="jakarta.persistence.schema-generation.create-source" value="metadata"/> -->
+      <!-- <property name="jakarta.persistence.schema-generation.drop-source" value="metadata"/> -->
+
+      <!-- Optional: Show SQL executed by Hibernate (if Hibernate is the provider) -->
+      <property name="hibernate.show_sql" value="true"/>
+      <property name="hibernate.format_sql" value="true"/>
+      <property name="hibernate.dialect" value="org.hibernate.dialect.H2Dialect"/>
+
+      <!-- Ensure H2 database is not dropped as long as the VM lives -->
+      <!-- <property name="hibernate.hbm2ddl.auto" value="create-drop" /> -->
+      <!-- The above is an older Hibernate specific property, superseded by jakarta.persistence.schema-generation -->
+    </properties>
+  </persistence-unit>
+</persistence>
